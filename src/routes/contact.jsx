@@ -37,9 +37,9 @@ export default function Contact() {
             </div>
             <div>
                 <h1>
-                    {contact.firstName || contact.last ? (
+                    {contact.firstName || contact.lastName ? (
                         <>
-                            {contact.firstName} {contact.last}
+                            {contact.firstName} {contact.lastName}
                         </>
                     ):
                     (
@@ -52,6 +52,18 @@ export default function Contact() {
                     <p><a href={`http://twitter.com/${contact.x}`} target="_blank">{contact.x}</a></p>
                 )}
                 {contact.bio && <p>{contact.bio}</p> }
+                <div>
+                    <Form action='edit'>
+                        <button type="submit">Edit</button>
+                    </Form>
+                    <Form action='destroy' method='post' onSubmit = {(event) => {
+                        if (!confirm('Are you sure you want to delete')) {
+                            event.preventDefault();
+                        }
+                    }}>
+                        <button type="submit">Delete</button>
+                    </Form>
+                </div>
             </div>
         </div>
     )
