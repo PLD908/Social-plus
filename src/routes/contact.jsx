@@ -1,69 +1,76 @@
-import {Form, useLoaderData} from "react-router-dom"
-import { getContacts } from "../contact";
+import { Form, useLoaderData } from "react-router-dom";
+import { getContact } from "../contact";
 
-export async function loader({params}) {
-    const contact = await getContact(params.contactId);
-    return{ contact }
-}
+export async function loader({ params }) {
+	const contact = await getContact(params.contactId);
+	return { contact };
+};
 
+const Favorite = () => {
+	const { contact } = useLoaderData();
+	let favorite = contact.favorite;
+	return (
+		<Form method='post'>
+			<button
+				name='favorite'
+				value={favorite ? "false" : "true"}
+				aria-label={favorite ? "Remove from favorites" : "Add to favorites"}>
+				{favorite ? "🧡" : "♥︎"}
+			</button>
+		</Form>
+	);
+};
 
-function Favorite() {
+const Contact = () => {
     const { contact } = useLoaderData();
-    let favorite = contact.favorite;
+	return (
+		<div id='contact'>
+			<div>
+				<img
+					key={contact.avatar}
+					src={contact.avatar || null}
+				/>
+			</div>
+			<div>
+				<h1>
+					{contact.first || contact.last ? (
+						<>
+							{contact.first} {contact.last}
+						</>
+					) : (
+						<i>No name</i>
+					)}
+					<Favorite />
+				</h1>
 
-    return (
-        <Form method="post">
-            <button 
-                name="favorite"
-                value={favorite ? "false" : "true"}
-                aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
-            >
-                {favorite ? "💛" : "🤍"}
-            </button>
-        </Form>
-    )
-}
+				{contact.twitter && (
+					<p>
+						<a
+							target='_blank'
+							href={`https://twitter.com/${contact.twitter}`}>
+							{contact.twitter}
+						</a>
+					</p>
+				)}
+				{contact.note && <p>{contact.note}</p>}
+				<div>
+					<Form action='edit'>
+						<button type='submit'>Edit</button>
+					</Form>
+					<Form
+						action='destroy'
+						method='post'
+						onSubmit={(event) => {
+							if (!confirm("Please confirm you want to delete this comment")) {
+								event.preventDefault();
+							}
+						}}>
+						<button type='submit'>Delete</button>
+					</Form>
+				</div>
+			</div>
+		</div>
+	);
+};
 
-export default function Contact() {
-    return (
-        <div id="contact">
-            <div>
-                <img 
-                    key={loader.avatar} 
-                    src={loader.avatar || null}  
-                />
-            </div>
-            <div>
-                <h1>
-                    {loader.firstName || loader.lastName ? (
-                        <>
-                            {loader.firstName} {loader.lastName}
-                        </>
-                    ):
-                    (
-                        <i>No name</i>
-                    )}
-                    <Favorite />
-                </h1>
-
-                {loader.x && (
-                    <p><a href={`http://twitter.com/${loader.x}`} target="_blank">{loader.x}</a></p>
-                )}
-                {loader.bio && <p>{loader.bio}</p> }
-                <div>
-                    <Form action="edit">
-                        <button type="submit">Edit</button>
-                    </Form>
-                    <Form 
-                        action="destroy" 
-                        method="post" 
-                        onSubmit={(e) => {if(!comfirm("Please comfirm you want to delete this comment")){
-                        e.preventDefault()
-                    }}}>
-                        <button type="submit">Delete</button>
-                    </Form>
-                </div>
-            </div>
-        </div>
-    )
-}
+export default Contact;
