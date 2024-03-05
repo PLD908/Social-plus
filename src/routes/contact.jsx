@@ -1,15 +1,14 @@
-import {Form} from "react-router-dom"
+import {Form, useLoaderData} from "react-router-dom"
+import { getContacts } from "../contact";
 
-const contact = {
-    firstName: "John",
-    lastName: "Deo",
-    avatar: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=2680&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    x: "@elon",
-    bio: "something about",
-    favorite: true,
+export async function loader({params}) {
+    const contact = await getContact(params.contactId);
+    return{ contact }
 }
 
-export function Favorite() {
+
+function Favorite() {
+    const { contact } = useLoaderData();
     let favorite = contact.favorite;
 
     return (
@@ -19,7 +18,7 @@ export function Favorite() {
                 value={favorite ? "false" : "true"}
                 aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
             >
-                {favorite ? "💛" : "💙"}
+                {favorite ? "💛" : "🤍"}
             </button>
         </Form>
     )
@@ -30,37 +29,37 @@ export default function Contact() {
         <div id="contact">
             <div>
                 <img 
-                    key={contact.avatar} 
-                    src={contact.avatar || null} 
-                    alt="" 
+                    key={loader.avatar} 
+                    src={loader.avatar || null}  
                 />
             </div>
             <div>
                 <h1>
-                    {contact.firstName || contact.lastName ? (
+                    {loader.firstName || loader.lastName ? (
                         <>
-                            {contact.firstName} {contact.lastName}
+                            {loader.firstName} {loader.lastName}
                         </>
                     ):
                     (
                         <i>No name</i>
                     )}
-                    <Favorite contact={contact} />
+                    <Favorite />
                 </h1>
 
-                {contact.x && (
-                    <p><a href={`http://twitter.com/${contact.x}`} target="_blank">{contact.x}</a></p>
+                {loader.x && (
+                    <p><a href={`http://twitter.com/${loader.x}`} target="_blank">{loader.x}</a></p>
                 )}
-                {contact.bio && <p>{contact.bio}</p> }
+                {loader.bio && <p>{loader.bio}</p> }
                 <div>
-                    <Form action='edit'>
+                    <Form action="edit">
                         <button type="submit">Edit</button>
                     </Form>
-                    <Form action='destroy' method='post' onSubmit = {(event) => {
-                        if (!confirm('Are you sure you want to delete')) {
-                            event.preventDefault();
-                        }
-                    }}>
+                    <Form 
+                        action="destroy" 
+                        method="post" 
+                        onSubmit={(e) => {if(!comfirm("Please comfirm you want to delete this comment")){
+                        e.preventDefault()
+                    }}}>
                         <button type="submit">Delete</button>
                     </Form>
                 </div>

@@ -1,10 +1,16 @@
-import { Outlet, Link, useLoaderData } from "react-router-dom"; 
-import { getContact } from "../contact";
+import {Outlet, useLoaderData, Link, Form} from "react-router-dom"
+import {getContacts, createContact} from "../contact";
 
-export async function loader() {
-    const contacts = await getContact();
-    return {contacts};
+export async function action() {
+    const contact = await getContacts();
+    return { contact };
+
 }
+export async function loader() {
+    const contacts = await getContacts();
+    return { contacts };
+}
+
 export default function Root() {
     const {contacts} = useLoaderData();
 
@@ -12,38 +18,43 @@ export default function Root() {
         <>
             <div id="sidebar">
                 <div>
-                    <form action="" id="search-form" role="search">
-                        <input type="search"
-                        id="q"
-                        aria-label= "search contacts"
-                        placeholder= "Search" 
-                        name = "q"/>
+                    <form id="search-form" role="search">
+                        <input 
+                            type="search"
+                            id="q"
+                            aria-label="Search contacts"
+                            placeholder="Search"
+                            name="q" 
+                        />
                         <div 
                             className="sr-only"
                             aria-hidden
-                            hidden= {true}>
-                        </div>
+                            hidden={true}></div>
+                        <div 
+                            className="sr-only"
+                            aria-live="polite"></div>
                     </form>
-                    <form method="post">
+                    <Form method="post">
                         <button type="submit">New</button>
-                    </form>
+                    </Form>
                 </div>
                 <nav>
-                    {contacts.length ? (
+                    {contacts.length ? 
+                       ( 
                     <ul>
-                        <li>
-                            <Link to={`/contacts/1`}>Updates</Link>
-                        </li>
-                        <li>
-                            <Link to={`/contacts/1`}>Your friends</Link>
-                        </li>
-                    </ul>
-                ) : (
-                    <p>
-                        <i>No contacts yet</i>
-                    </p>
+                        {contacts.map(contact => (
+                            <li key={contact.id}>
+                                <Link>{contact.first || contact.last ? (
+                                    <>{contact.first} {contact.last}</>
+                                ) : (<i>No Name</i>)}{" "}
+                                {contact.favorite && <span>*</span>}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>) : (
+                    <p><i>No Contacts yet</i></p>
                     )}
-                </nav>   
+                </nav>
             </div>
             <div id="detail">
                 <Outlet />
