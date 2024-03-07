@@ -52,7 +52,7 @@ const Contact = () => {
 						</a>
 					</p>
 				)}
-				{contact.note && <p>{contact.note}</p>}
+				{contact.notes && <p>{contact.notes}</p>}
 				<div>
 					<Form action='edit'>
 						<button type='submit'>Edit</button>

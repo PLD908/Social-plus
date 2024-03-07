@@ -19,14 +19,14 @@ export default function EditContact() {
                 placeholder="First"
                 aria-label="First name"
                 name="first"
-                defaultValue={contact.firstname}
+                defaultValue={contact.first}
                 />
                 <input 
                 type="text"
                 placeholder="Last"
                 aria-label="Last name"
                 name="last"
-                defaultValue={contact.lastname}
+                defaultValue={contact.last}
                 />
             </p>
             <label>
@@ -35,7 +35,7 @@ export default function EditContact() {
                 type="text"
                 placeholder="@john"
                 name="twitter"
-                defaultValue={contact.x}
+                defaultValue={contact.twitter}
                 />
             </label>
             <label>
@@ -52,7 +52,7 @@ export default function EditContact() {
                 <span>Notes</span>
                 <textarea
                 name="notes"
-                defaultValue={contact.bio}
+                defaultValue={contact.notes}
                 rows={6}
                 />
             </label>

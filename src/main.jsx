@@ -11,7 +11,7 @@ import Contact, { loader as contactLoader } from "./routes/contact";
 import EditContact, {action as editAction} from "./routes/edit";
 
 const router = createBrowserRouter([
-	{
+	{ 
 		path: "/",
 		element: <Root />,
 		errorElement: <ErrorPage />,
